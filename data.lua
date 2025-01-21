@@ -6,8 +6,7 @@ function MapGen_Kronova()
     --Naivus based generation
     local map_gen_setting = table.deepcopy(data.raw.planet.nauvis.map_gen_settings)
 
-    map_gen_setting.property_expression_names.temperature = "aquilo_temperature"
-    map_gen_setting.property_expression_names.moisture = "moisture_basic"
+    map_gen_setting.property_expression_names["temperature"] = "aquilo_temperature"
     
     map_gen_setting.autoplace_controls = {
         
@@ -17,7 +16,7 @@ function MapGen_Kronova()
         ["coal"] = { frequency = 2.5, size = 2, richness = 2.5},
         ["copper-ore"] = { frequency = 2, size = 1, richness = 2},
         ["crude-oil"] = { frequency = 2, size = 2, richness = 3},
-        ["trees"] = { frequency = 3, size = 2, richness = 1 },
+        ["trees"] = { frequency = 1, size = 1, richness = 1 },
         ["water"] = { frequency = 2, size = 2, richness = 2 },
     }
 
@@ -104,6 +103,22 @@ end
 local nauvis = data.raw["planet"]["nauvis"]
 local planet_lib = require("__PlanetsLib__.lib.planet")
 
+local start_astroid_spawn_rate =
+{
+  probability_on_range_chunk =
+  {
+    {position = 0.1, probability = asteroid_util.nauvis_chunks, angle_when_stopped = asteroid_util.chunk_angle},
+    {position = 0.9, probability = asteroid_util.fulgora_chunks, angle_when_stopped = asteroid_util.chunk_angle}
+  },
+  type_ratios =
+  {
+    {position = 0.1, ratios = asteroid_util.aquilo_ratio},
+    {position = 0.9, ratios = asteroid_util.fulgora_ratio},
+  }
+}
+local start_astroid_spawn = asteroid_util.spawn_definitions(start_astroid_spawn_rate, 0.1)
+
+
 local kronova = 
 {
     type = "planet",
@@ -121,7 +136,9 @@ local kronova =
         ["magnetic-field"] = nauvis.surface_properties["magnetic-field"],
         ["day-night-cycle"] = nauvis.surface_properties["day-night-cycle"],
     },
-    map_gen_settings = MapGen_Kronova()
+    map_gen_settings = MapGen_Kronova(),
+    asteroid_spawn_influence = 1,
+    asteroid_spawn_definitions = start_astroid_spawn
 }
 
 kronova.orbit = {

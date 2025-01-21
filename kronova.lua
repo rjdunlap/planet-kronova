@@ -1,5 +1,6 @@
 local utils = require("__any-planet-start__/utils")
-
+utils.set_prerequisites("steel-processing", nil)
+utils.add_recipes("steel-processing", {"medium-electric-pole", "iron-stick"})
 utils.set_prerequisites("concrete", {"automation-science-pack"})
 utils.set_prerequisites("heating-tower", {"concrete"})
 
